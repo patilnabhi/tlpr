@@ -1,0 +1,21 @@
+<launch>
+
+	<arg name="rvizconfig" default="$(find two_link_planar_robot)/rviz/my_robot.rviz" />
+	<arg name="show_rviz" default="true" />
+	<arg name="circle_length" default="75"/>
+	<arg name="rate_joint" default="50"/>
+	<arg name="rate_animate" default="20"/>
+
+	<param name="robot_description" textfile="$(find two_link_planar_robot)/urdf/my_robot.urdf" />
+
+	<node name="animate_path" pkg="two_link_planar_robot" type="animate_path.py">
+		<param name="circle_length" value="$(arg circle_length)" />
+		<param name="rate_animate" value="$(arg rate_animate)" />
+	</node>
+	<node name="update_state" pkg="two_link_planar_robot" type="update_joint_state.py">
+		<param name="rate_joint" value="$(arg rate_joint)" />
+	</node>
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" if="$(arg show_rviz)"/>
+
+</launch>
